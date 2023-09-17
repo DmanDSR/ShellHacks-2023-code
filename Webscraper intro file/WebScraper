@@ -1,0 +1,18 @@
+from bs4 import BeautifulSoup #LIBRARYS NEEDED 
+import requests
+import csv #for exporting to csv file format
+
+page_to_scrape = requests.get ("http://quotes.toscrape.com") #request target website and turn it into a varable
+soup = BeautifulSoup(page_to_scrape.text, "html.parser") #parces the websites html and store this as a variable 
+quotes = soup.findAll("span", attrs={"class":"text"}) #saying to scrape span's variable 
+authors = soup.findAll("small", attrs={"class":"author"}) #small's variable
+
+file = open("scraped_quotes.csv", "w") #opens a file thats a .csv file
+writer = csv.writer(file) #variable that writes to .csv file
+
+writer.writerow(["QUOTES", "AUTHORS"]) # the header name for each colomn
+
+for quote, author in zip(quotes, authors): #goes through what you specify and prints it
+    print(quote.text+ " - " + author.text) #prints out the info 
+    writer.writerow([quote.text, author.text]) # writes the info to a file
+file.close() #always close any file you open
